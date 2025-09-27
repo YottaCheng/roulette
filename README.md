@@ -1,38 +1,35 @@
-# Python Roulette Strategy Platform (v4.0)
+# Python 轮盘赌策略实验平台 (v3.0)
 
-This is a comprehensive roulette simulator and testing platform built with Python and Tkinter. The project is designed with a clean separation between the game logic engine and the user interface, allowing for robust testing and future expansion into automated strategy agents.
+这是一个使用 Python 和 Tkinter 构建的轮盘赌模拟器。它的核心设计目标是提供一个功能完整、逻辑严谨的手动下注平台，并为未来开发自动化下注策略的智能代理（Agent）打下坚实的基础。
 
-## Key Features
+## 主要功能
 
-- **Dual Roulette Modes**: Supports both American (with '0' and '00') and European (with '0') wheels.
-- **Complete Bet Types**:
-    - **1:1 Payouts**: Red/Black, Odd/Even, High/Low (1-18, 19-36).
-    - **2:1 Payouts**: Dozens (1-12, 13-24, 25-36) and Columns.
-    - **35:1 Payouts**: Bets on a single number.
-- **Multi-Bet Capability**: Users can place multiple, distinct bets in a single round.
-- **Refined Graphical User Interface (GUI)**: A modern, user-friendly interface for managing funds, placing bets, and viewing spin history. Features include a pop-up number pad for easy single-number selection.
-- **Comprehensive Unit Testing**: The project includes a dedicated test suite that verifies the accuracy of the game logic for all betting scenarios and edge cases.
+- **双模式轮盘**: 支持美式轮盘 (含 '0' 和 '00') 和欧式轮盘 (仅含 '0')。
+- **多种下注类型**:
+    - 1:1 赔率: 红/黑, 奇/偶, 大/小 (1-18, 19-36)。
+    - 2:1 赔率: 打 (1-12, 13-24, 25-36) 和列。
+    - 35:1 赔率: 押注单个数字。
+- **多重下注**: 每轮可以同时下注多个不同的选项。
+- **图形化界面**: 提供一个直观的图形用户界面（GUI），用于管理资金、下注和查看历史记录。
+- **数字键盘**: 为“押单个数字”功能提供了一个专属的、带颜色区分的数字键盘弹窗，操作便捷。
+- **单元测试**: 项目包含一个独立的测试套件，用于验证核心游戏逻辑的准确性。
 
-## Project Architecture
+## 项目文件结构
 
-The project is intentionally separated into distinct files, each with a clear responsibility:
+- `roulette.py`: **核心规则模块**。定义了 `RouletteWheel` 类，封装了轮盘的所有基本规则，如数字、颜色、列的归属以及各种下注类型的输赢判断。
+- `bet.py`: **主应用程序**。包含了 `GameEngine` (游戏逻辑引擎) 和 `RouletteBettingGUI` (图形用户界面) 两个核心类。这是运行手动模拟器的主文件。
+- `test.py`: **单元测试模块**。使用 Python 内置的 `unittest` 框架，对 `GameEngine` 的各种下注场景和边界情况进行自动化测试，确保逻辑的正确性。
 
--   `roulette.py`: **The Rule Book**. This core module defines the `RouletteWheel` class, which contains the fundamental rules of the game, such as the numbers, their colors, column layouts, and the logic for checking if a bet wins or loses against an outcome.
--   `bet.py`: **The Backend Engine**. This file contains the `GameEngine` class. It is the brain of the application, managing the player's balance, tracking bets, calculating profits, and maintaining the game's state. It is a non-visual component.
--   `bet_ui.py`: **The Main Application (Frontend)**. This is the primary user interface that the user interacts with. It imports the `GameEngine` and provides all the visual elements (buttons, labels, etc.). **This is the file you run to play the game.**
--   `test.py`: **The Quality Inspector**. This file contains the automated test suite using Python's `unittest` framework. It rigorously tests the `GameEngine` to ensure all calculations and game logic are correct.
--   `play.py`: **A Simpler, Alternative Simulator**. This is a separate, more basic GUI application for simple spin simulations without the betting component.
+## 如何运行
 
-## How to Use
+本项目仅使用 Python 标准库，无需安装任何外部依赖。
 
-This project uses only standard Python libraries, so no external installation is needed.
-
-1.  **To Run the Main Betting Platform**:
+1.  **运行主程序**:
     ```bash
-    python bet_ui.py
+    python bet.py
     ```
 
-2.  **To Run the Automated Test Suite**:
+2.  **运行测试套件**:
     ```bash
     python -m unittest test.py
     ```
