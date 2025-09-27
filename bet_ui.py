@@ -155,27 +155,62 @@ class RouletteBettingGUI:
         dialog.protocol("WM_DELETE_WINDOW", on_closing)
 
     def open_number_pad(self):
-        if not self.engine.wheel: messagebox.showerror("错误", "请先开始游戏"); return
-        pad = tk.Toplevel(self.root); pad.title("选择一个数字"); pad.transient(self.root); pad.grab_set(); pad.configure(bg="white")
-        window_width = 280; window_height = 250
-        center_x = self.root.winfo_x() + (self.root.winfo_width() // 2) - (window_width // 2)
-        center_y = self.root.winfo_y() + (self.root.winfo_height() // 2) - (window_height // 2)
-        pad.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
-        numbers_frame = tk.Frame(pad, padx=10, pady=10, bg="white"); numbers_frame.pack()
+        
+        if not self.engine.wheel:
+            messagebox.showerror("错误", "请先开始游戏")
+            return
+
+        pad = tk.Toplevel(self.root)
+        pad.withdraw() 
+        pad.title("选择一个数字")
+        pad.transient(self.root)
+        pad.grab_set()
+        pad.configure(bg="white")
+
+        numbers_frame = tk.Frame(pad, padx=10, pady=10, bg="white")
+        numbers_frame.pack()
         numbers = self.engine.wheel.numbers
+
         def get_btn_color(num_str):
             color = self.engine.wheel.get_color(num_str)
             if color == "红色": return "#c0392b"
             if color == "黑色": return "#2c3e50"
             return "#27ae60"
-        def select_action(selected_number): self.handle_place_bet("Number", number=selected_number); pad.destroy()
+
+        def select_action(selected_number):
+            self.handle_place_bet("Number", number=selected_number)
+            pad.destroy()
+
         row, col = 0, 0
         for num in sorted(numbers, key=lambda x: int(x) if x.isdigit() else -1):
             btn_color = get_btn_color(num)
             label_btn = tk.Label(numbers_frame, text=num, fg="white", bg=btn_color, width=4, font=("Arial", 10, "bold"), relief="raised", borderwidth=2, padx=5, pady=5)
             label_btn.bind("<Button-1>", lambda event, n=num: select_action(n))
-            label_btn.grid(row=row, column=col, padx=2, pady=2); col += 1
-            if col > 6: col = 0; row += 1
+            label_btn.grid(row=row, column=col, padx=2, pady=2)
+            col += 1
+            if col > 6:
+                col = 0
+                row += 1
+        
+        # --- 新增的居中逻辑 ---
+        # 1. 强制更新窗口，让Tkinter计算出所需大小
+        pad.update_idletasks() 
+
+        # 2. 获取计算出的大小和主窗口的位置
+        pad_width = pad.winfo_width()
+        pad_height = pad.winfo_height()
+        main_x = self.root.winfo_x()
+        main_y = self.root.winfo_y()
+        main_width = self.root.winfo_width()
+        main_height = self.root.winfo_height()
+
+        # 3. 计算居中坐标
+        center_x = main_x + (main_width // 2) - (pad_width // 2)
+        center_y = main_y + (main_height // 2) - (pad_height // 2)
+
+        # 4. 移动窗口到指定坐标
+        pad.geometry(f'+{center_x}+{center_y}')
+        pad.deiconify()
 
     def handle_place_bet(self, bet_type, number=None):
         try:
